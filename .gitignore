@@ -1,24 +1,50 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # Editor directories and files
 .vscode/*
+!.vscode/settings.json
 !.vscode/extensions.json
-.idea
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# production
+/build
+dist
+dist-ssr
+
+# testing
+/coverage
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+logs
+*.log
+
+# misc
 .DS_Store
+.idea
+*.pem
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# local env files
+.env*.local
+*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
