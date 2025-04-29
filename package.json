@@ -1,7 +1,8 @@
 {
   "name": "react-template",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
+  "author": "Rajdeep Ghosh <https://x.com/rajdeepghosh__>",
   "type": "module",
   "scripts": {
     "dev": "vite",
