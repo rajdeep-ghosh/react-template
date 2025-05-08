@@ -5,7 +5,7 @@ const config = {
   trailingComma: "none",
   semi: true,
   importOrder: [
-    "^(react/(.*)$)|^(react$)|^(react-dom$)",
+    "^(react/(.*)$)|^(react$)|^(react-dom/(.*)$)|^(react-dom$)",
     "<THIRD_PARTY_MODULES>",
     "",
     "^@/config/(.*)$",
