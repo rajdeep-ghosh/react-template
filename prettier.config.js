@@ -8,6 +8,7 @@ const config = {
     "^(react/(.*)$)|^(react$)|^(react-dom/(.*)$)|^(react-dom$)",
     "<THIRD_PARTY_MODULES>",
     "",
+    "^@/routeTree.gen",
     "^@/config/(.*)$",
     "^@/lib/(.*)$",
     "^@/hooks/(.*)$",
