@@ -10,7 +10,9 @@ export default defineConfig({
   plugins: [
     TanStackRouterVite({
       target: "react",
-      autoCodeSplitting: true
+      autoCodeSplitting: true,
+      quoteStyle: "double",
+      semicolons: true
     }),
     react(),
     tailwindcss()
