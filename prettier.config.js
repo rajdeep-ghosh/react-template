@@ -6,6 +6,8 @@ const config = {
   semi: true,
   importOrder: [
     "^(react/(.*)$)|^(react$)|^(react-dom/(.*)$)|^(react-dom$)",
+    "^(react-router/(.*)$)|^(react-router$)|^(react-router-dom/(.*)$)|^(react-router-dom$)",
+    "^(@tanstack/react-router/(.*)$)|^(@tanstack/react-router$)",
     "<THIRD_PARTY_MODULES>",
     "",
     "^@/routeTree.gen",
