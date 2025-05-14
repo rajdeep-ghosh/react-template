@@ -10,7 +10,7 @@ const config = {
     "^(@tanstack/react-router/(.*)$)|^(@tanstack/react-router$)",
     "<THIRD_PARTY_MODULES>",
     "",
-    "^@/routeTree.gen",
+    "^@/route-tree.gen",
     "^@/config/(.*)$",
     "^@/lib/(.*)$",
     "^@/hooks/(.*)$",

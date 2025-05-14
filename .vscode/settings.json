@@ -19,12 +19,12 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.watcherExclude": {
-    "**/routeTree.gen.ts": true
+    "**/route-tree.gen.ts": true
   },
   "files.readonlyInclude": {
-    "**/routeTree.gen.ts": true
+    "**/route-tree.gen.ts": true
   },
   "search.exclude": {
-    "**/routeTree.gen.ts": true
+    "**/route-tree.gen.ts": true
   }
 }
