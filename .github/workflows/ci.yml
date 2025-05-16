@@ -10,19 +10,90 @@ on:
       - main
 
 jobs:
-  prettier:
-    name: Prettier
+  setup-and-install:
+    name: Install Dependencies
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          version: 9
-          run_install: |
-            - args: [--frozen-lockfile]
+          node-version: "lts/*"
+
+      - name: Detect Package Manager
+        id: detect-pm
+        shell: bash
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
+            echo "Detected pnpm"
+          elif [ -f yarn.lock ]; then
+            echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
+            echo "Detected yarn"
+          elif [ -f package-lock.json ]; then
+            echo "PACKAGE_MANAGER=npm" >> $GITHUB_ENV
+            echo "Detected npm"
+          elif [ -f bun.lock ]; then
+            echo "PACKAGE_MANAGER=bun" >> $GITHUB_ENV
+            echo "Detected bun"
+          else
+            echo "No lock file found. Defaulting to pnpm."
+            echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV # Default to pnpm
+          fi
+
+      - name: Install Dependencies
+        shell: bash
+        run: |
+          case "$PACKAGE_MANAGER" in
+            pnpm)
+              echo "Running pnpm install..."
+              pnpm install --frozen-lockfile
+              ;;
+            yarn)
+              echo "Running yarn install..."
+              yarn install --frozen-lockfile
+              ;;
+            npm)
+              echo "Running npm install..."
+              npm ci
+              ;;
+            bun)
+              echo "Running bun install..."
+              bun install
+              ;;
+            *)
+              echo "Unknown package manager: $PACKAGE_MANAGER"
+              exit 1
+              ;;
+          esac
+
+      - name: Upload Repository with Dependencies as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-with-deps
+          path: . # Upload the entire current directory (the workspace)
+          retention-days: 1 # Set how long to keep the artifact
+
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    needs: setup-and-install
+
+    steps:
+      - name: Download Repository with Dependencies Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: repo-with-deps
+
+      - name: Setup Node.js
+        # Although node_modules is present, setup-node is needed to get
+        # the 'node' executable and potentially package manager binaries in the PATH
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
 
       - name: Format
         run: pnpm run format
@@ -30,16 +101,20 @@ jobs:
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+    needs: setup-and-install
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+    steps:
+      - name: Download Repository with Dependencies Artifact
+        uses: actions/download-artifact@v4
         with:
-          version: 9
-          run_install: |
-            - args: [--frozen-lockfile]
+          name: repo-with-deps
+
+      - name: Setup Node.js
+        # Although node_modules is present, setup-node is needed to get
+        # the 'node' executable and potentially package manager binaries in the PATH
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
 
       - name: Lint
         run: pnpm run lint
