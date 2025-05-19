@@ -18,31 +18,43 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "lts/*"
-
       - name: Detect Package Manager
         id: detect-pm
         shell: bash
         run: |
+          PACKAGE_MANAGER=""
           if [ -f pnpm-lock.yaml ]; then
-            echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
-            echo "Detected pnpm"
+            PACKAGE_MANAGER="pnpm"
           elif [ -f yarn.lock ]; then
-            echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
-            echo "Detected yarn"
+            PACKAGE_MANAGER="yarn"
           elif [ -f package-lock.json ]; then
-            echo "PACKAGE_MANAGER=npm" >> $GITHUB_ENV
-            echo "Detected npm"
+            PACKAGE_MANAGER="npm"
           elif [ -f bun.lock ]; then
-            echo "PACKAGE_MANAGER=bun" >> $GITHUB_ENV
-            echo "Detected bun"
+            PACKAGE_MANAGER="bun"
           else
+            PACKAGE_MANAGER="pnpm"
             echo "No lock file found. Defaulting to pnpm."
-            echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV # Default to pnpm
           fi
+          echo "Detected package manager: $PACKAGE_MANAGER"
+          echo "PACKAGE_MANAGER=$PACKAGE_MANAGER" >> $GITHUB_ENV
+
+      - name: Setup Node.js and Detected Package Manager
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Setup pnpm (if detected)
+        if: env.PACKAGE_MANAGER == 'pnpm'
+        shell: bash
+        run: |
+          echo "Enabling pnpm using corepack..."
+          corepack enable pnpm
+
+      - name: Setup bun (if detected)
+        if: env.PACKAGE_MANAGER == 'bun'
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - name: Install Dependencies
         shell: bash
