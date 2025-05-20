@@ -4,6 +4,7 @@
   "private": true,
   "author": "Rajdeep Ghosh <https://x.com/rajdeepghosh__>",
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
